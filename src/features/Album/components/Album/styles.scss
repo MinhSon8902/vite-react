@@ -1,0 +1,8 @@
+.album {
+  &__thumbnail {
+    & > img {
+    }
+  }
+  &__name {
+  }
+}
