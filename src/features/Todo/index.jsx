@@ -1,10 +1,12 @@
-import { Route, Routes, useLocation, useMatch } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import NotFound from '../../components/NotFound';
-import ListPage from './pages/ListPage';
 import DetailPage from './pages/DetailPage';
+import ListPage from './pages/ListPage';
 
 function TodoFeature(props) {
   const match = useLocation();
+  console.log(match);
+  console.log(match.pathname);
   return (
     <div>
       <p>Hello Todo</p>
