@@ -1,10 +1,18 @@
-import queryString from 'query-string';
-import { useEffect, useMemo, useState } from 'react';
-import { useLocation, useMatch, useNavigate } from 'react-router-dom';
+import {
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
+import NotFound from '../../../../components/NotFound';
+import DetailPage from '../DetailPage';
 import TodoForm from '../../components/TodoForm';
 import TodoList from '../../components/TodoList';
+import { useEffect, useMemo, useState } from 'react';
+import queryString from 'query-string';
 
-function ListPage(props) {
+function ListPage() {
   const initTodoList = [
     {
       id: 1,
@@ -23,10 +31,8 @@ function ListPage(props) {
     },
   ];
 
+  const navigate = useNavigate();
   const location = useLocation();
-  const history = useNavigate();
-  const match = useMatch();
-  // console.log(match);
   const [todoList, setTodoList] = useState(initTodoList);
   const [filterStatus, setFilterStatus] = useState(() => {
     const params = queryString.parse(location.search);
@@ -44,34 +50,18 @@ function ListPage(props) {
       ...newTodoList[idx],
       status: newTodoList[idx].status === 'new' ? 'completed' : 'new',
     };
-    // console.log(newTodoList);
-
     setTodoList(newTodoList);
   };
 
-  const handleShowAllClick = () => {
-    // setFilterStatus('all');
-    const queryParams = { status: 'all' };
-    history.push({
-      pathname: match.path,
-      search: queryString.stringify(queryParams),
-    });
-  };
-  const handleShowCompletedClick = () => {
-    // setFilterStatus('completed');
-    const queryParams = { status: 'completed' };
-    history.push({
-      pathname: match.path,
-      search: queryString.stringify(queryParams),
-    });
-  };
-  const handleShowNewClick = () => {
-    // setFilterStatus('new');
-    const queryParams = { status: 'new' };
-    history.push({
-      pathname: match.path,
-      search: queryString.stringify(queryParams),
-    });
+  const handleTodoFormSubmit = (values) => {
+    const newTodo = {
+      id: todoList.length + 1,
+      title: values.title,
+      status: 'new',
+    };
+    const newTodoList = [...todoList, newTodo];
+
+    setTodoList(newTodoList);
   };
 
   const renderedTodoList = useMemo(() => {
@@ -80,19 +70,6 @@ function ListPage(props) {
     );
   }, [todoList, filterStatus]);
 
-  const handleTodoFormSubmit = (values) => {
-    // console.log('Form submit', values);
-    const newTodo = {
-      id: todoList.length + 1,
-      title: values.title,
-      status: 'new',
-    };
-
-    const newTodoList = [...todoList, newTodo];
-
-    setTodoList(newTodoList);
-  };
-
   return (
     <div>
       <h3>Todo Form</h3>
@@ -100,32 +77,27 @@ function ListPage(props) {
       <h3>Todo List</h3>
       <TodoList todoList={renderedTodoList} onTodoClick={handleTodoClick} />
       <div>
-        <button
-          onClick={() => {
-            handleShowAllClick();
-          }}
-        >
-          Show All
-        </button>
-        <button
-          onClick={() => {
-            handleShowCompletedClick();
-          }}
-        >
+        <button onClick={() => navigate('/todos')}>Show All</button>
+        <button onClick={() => navigate('/todos?status=completed')}>
           Show Completed
         </button>
-        <button
-          onClick={() => {
-            handleShowNewClick();
-          }}
-        >
-          Show New
-        </button>
+        <button onClick={() => navigate('/todos?status=new')}>Show New</button>
       </div>
+      <Outlet />
     </div>
   );
 }
 
-ListPage.propTypes = {};
+function TodoFeature() {
+  return (
+    <div>
+      <Routes>
+        <Route path="/" element={<ListPage />} />
+        <Route path="/todos/:todoId" element={<DetailPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
+  );
+}
 
-export default ListPage;
+export default TodoFeature;

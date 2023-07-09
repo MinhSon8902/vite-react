@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-// import InputField from 'components/form-controls/Input-Field';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -19,8 +18,6 @@ function TodoForm(props) {
     },
     resolver: yupResolver(schema),
   });
-
-  console.log(form);
 
   const handleSubmit = (values) => {
     const { onSubmit } = props;

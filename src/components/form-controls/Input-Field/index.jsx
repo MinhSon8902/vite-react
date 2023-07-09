@@ -6,8 +6,6 @@ import { TextField } from '@mui/material';
 function InputField(props) {
   const { form, name, label, disable } = props;
   const { control } = form;
-  console.log(control);
-
   return (
     <Controller
       name={name}

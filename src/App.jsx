@@ -7,6 +7,7 @@ import CounterFeature from './features/Counter';
 import TodoFeature from './features/Todo';
 import Header from './components/Header';
 import './App.css';
+import ProductFeature from './features/Product';
 
 function App() {
   useEffect(() => {
@@ -15,7 +16,6 @@ function App() {
         _limit: 10,
       };
       const productList = await productsApi.getAll(params);
-      // console.log(productList);
     };
     fetchProducts();
   }, []);
@@ -24,16 +24,11 @@ function App() {
     <div className="App">
       <Header />
       <Routes>
-        <Route path="/home" render={() => <Route to="/" />} />
-        <Route
-          path="/post-list/:postId"
-          render={() => <Route to="/posts/:postId" />}
-        />
         <Route path="/" element={<CounterFeature />} />
-        <Route path="/todos" element={<TodoFeature />} />
+        <Route path="/todos/*" element={<TodoFeature />} />
+        <Route path="/products/*" element={<ProductFeature />} />
         <Route path="/albums" element={<AlbumFeature />} />
-
-        <Route element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

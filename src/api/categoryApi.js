@@ -6,7 +6,7 @@ const categoryApi = {
     return axiosClient.get(url, { params });
   },
   get(id) {
-    const url = `/categories${id}`;
+    const url = `/categories/${id}`;
     return axiosClient.get(url);
   },
   add(data) {
